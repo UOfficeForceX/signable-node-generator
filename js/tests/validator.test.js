@@ -241,4 +241,47 @@ describe('validator.js - validateExportData（匯出/複製前整體驗證，TC-
     assertFalse(result.valid);
     assertTrue(result.errors.length > 0);
   });
+
+  it('TC-106 兩個站點 code 相同時應回報驗證錯誤', () => {
+    const data = {
+      signableNodes: [
+        buildMinimalNode({ code: 'dupCode' }),
+        buildMinimalNode({ code: 'dupCode' })
+      ]
+    };
+    const result = validateExportData(data);
+    assertFalse(result.valid);
+    assertTrue(result.errors.some((e) => e.message.includes('重複')));
+  });
+
+  it('站點 code 皆不同時不應回報重複錯誤', () => {
+    const data = {
+      signableNodes: [
+        buildMinimalNode({ code: 'codeA' }),
+        buildMinimalNode({ code: 'codeB' })
+      ]
+    };
+    const result = validateExportData(data);
+    assertTrue(result.valid);
+  });
+});
+
+describe('validator.js - validateDuplicateCodes', () => {
+  it('三筆站點中有兩筆 code 相同，應回傳 2 筆錯誤（對應各自的站點索引）', () => {
+    const nodes = [
+      buildMinimalNode({ code: 'A' }),
+      buildMinimalNode({ code: 'B' }),
+      buildMinimalNode({ code: 'A' })
+    ];
+    const errors = validateDuplicateCodes(nodes);
+    assertEqual(errors.length, 2);
+    assertEqual(errors[0].path, 'signableNodes[0].code');
+    assertEqual(errors[1].path, 'signableNodes[2].code');
+  });
+
+  it('code 為空白字串時應忽略（由必填規則另行處理）', () => {
+    const nodes = [buildMinimalNode({ code: '' }), buildMinimalNode({ code: '' })];
+    const errors = validateDuplicateCodes(nodes);
+    assertEqual(errors.length, 0);
+  });
 });

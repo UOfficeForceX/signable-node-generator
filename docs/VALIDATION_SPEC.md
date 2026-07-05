@@ -25,6 +25,7 @@
 | 欄位 | 規則 |
 |---|---|
 | `code` | 必填，不可空白 |
+| `code` | 不可與其他站點的 `code` 重複（同一份 JSON 內所有站點代碼須唯一） |
 | `approverSetting` | 必填 |
 | `completeRuleSetting` | 必填 |
 | `decisionSetting` | 必填 |

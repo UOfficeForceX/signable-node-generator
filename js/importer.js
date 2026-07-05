@@ -56,6 +56,7 @@ async function handleImportConfirm() {
   data.signableNodes.forEach((node, idx) => {
     nodeErrors.push(...validateNode(node, idx));
   });
+  nodeErrors.push(...validateDuplicateCodes(data.signableNodes));
   if (nodeErrors.length > 0) {
     showImportErrors(nodeErrors.map((e) => e.message));
     return;

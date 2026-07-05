@@ -221,6 +221,32 @@ function validateAllowTypeSetting(setting, context) {
   return errors;
 }
 
+function validateDuplicateCodes(nodes) {
+  const errors = [];
+  const indicesByCode = new Map();
+
+  nodes.forEach((node, idx) => {
+    const code = node && typeof node.code === 'string' ? node.code.trim() : '';
+    if (!code) return;
+    if (!indicesByCode.has(code)) {
+      indicesByCode.set(code, []);
+    }
+    indicesByCode.get(code).push(idx);
+  });
+
+  indicesByCode.forEach((indices, code) => {
+    if (indices.length <= 1) return;
+    indices.forEach((idx) => {
+      errors.push({
+        path: `signableNodes[${idx}].code`,
+        message: `${code} / 站點基本資料：站點代碼「${code}」重複，站點代碼不可重複。`
+      });
+    });
+  });
+
+  return errors;
+}
+
 function validateExportData(data) {
   const rootErrors = validateRoot(data);
   if (rootErrors.length > 0) {
@@ -230,5 +256,6 @@ function validateExportData(data) {
   data.signableNodes.forEach((node, idx) => {
     errors.push(...validateNode(node, idx));
   });
+  errors.push(...validateDuplicateCodes(data.signableNodes));
   return { valid: errors.length === 0, errors };
 }
