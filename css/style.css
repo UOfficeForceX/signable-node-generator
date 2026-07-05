@@ -1,0 +1,154 @@
+html, body {
+  height: 100%;
+}
+
+body {
+  background: #f5f6f8;
+}
+
+.app-layout {
+  display: grid;
+  grid-template-columns: 22% 6px 48% 6px 30%;
+  height: calc(100vh - 56px);
+}
+
+.app-col {
+  overflow-y: auto;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.col-left {
+  border-right: 1px solid #dee2e6;
+}
+
+.col-right {
+  border-left: 1px solid #dee2e6;
+}
+
+.col-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .75rem 1rem;
+  border-bottom: 1px solid #dee2e6;
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 2;
+}
+
+.resizer {
+  cursor: col-resize;
+  background: #e9ecef;
+}
+
+.resizer:hover,
+.resizer.active {
+  background: #adb5bd;
+}
+
+.site-list {
+  padding: .5rem;
+  flex: 1;
+}
+
+.site-card {
+  border: 1px solid #dee2e6;
+  border-radius: .375rem;
+  padding: .5rem .75rem;
+  margin-bottom: .5rem;
+  background: #fff;
+  display: flex;
+  gap: .5rem;
+  align-items: flex-start;
+  cursor: pointer;
+}
+
+.site-card.active {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 .15rem rgba(13, 110, 253, .25);
+}
+
+.site-card .drag-handle {
+  cursor: grab;
+  color: #adb5bd;
+  user-select: none;
+  padding-top: .1rem;
+}
+
+.site-card .site-summary {
+  flex: 1;
+  font-size: .78rem;
+  color: #495057;
+}
+
+.site-card .site-summary .code {
+  font-weight: 600;
+  font-size: .9rem;
+  color: #212529;
+  word-break: break-all;
+}
+
+.site-card .site-actions {
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+}
+
+.editor-body {
+  padding: 1rem;
+  flex: 1;
+}
+
+.json-preview {
+  flex: 1;
+  margin: 0;
+  padding: 1rem;
+  font-size: .8rem;
+  background: #212529;
+  color: #e9ecef;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.validation-errors {
+  padding: .5rem 1rem 0;
+}
+
+.custom-item-card {
+  border: 1px dashed #adb5bd;
+  border-radius: .375rem;
+  padding: .5rem;
+  margin-bottom: .5rem;
+  background: #f8f9fa;
+}
+
+.required-mark {
+  color: #dc3545;
+  margin-right: 2px;
+}
+
+.section-title {
+  font-weight: 600;
+  margin-bottom: .5rem;
+}
+
+@media (max-width: 992px) {
+  .app-layout {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+  }
+
+  .resizer {
+    display: none !important;
+  }
+
+  .app-col {
+    width: 100% !important;
+    max-height: none;
+  }
+}
