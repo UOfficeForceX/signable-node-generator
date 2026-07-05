@@ -187,3 +187,25 @@ const appState = {
 - JSON 預覽可關閉與重新開啟。
 - 三欄寬度可拖拉調整。
 - 輸出 JSON 通過所有驗證規則。
+
+## 11. 文件閱讀順序
+
+AI coding agent 開始開發前應依序閱讀：
+
+1. `AGENTS.md`（本檔）
+2. `docs/SPEC.md`
+3. `docs/DATA_MODEL.md`
+4. `docs/UI_SPEC.md`
+5. `docs/VALIDATION_SPEC.md`
+6. `docs/IMPORT_EXPORT_SPEC.md`
+7. `docs/COPILOT_TASKS.md`
+
+## 12. 部署方式
+
+實作檔案放在 repository root（`index.html`、`css/style.css`、`js/*.js`）。
+
+推送到 `main` 分支後，`.github/workflows/deploy-pages.yml` 會自動將 repository root 建置並部署到 GitHub Pages，無需手動設定 Pages Source 目錄。
+
+## 13. 自動化測試
+
+直接在瀏覽器開啟 `tests.html` 即可執行自動化測試（純 Vanilla JS，無需 npm / build）。測試涵蓋 `state.js`、`generator.js`、`validator.js`、`importer.js` 的邏輯行為，測試結果會顯示在頁面標題與畫面上，並暴露於 `window.__TEST_RESULTS__`。

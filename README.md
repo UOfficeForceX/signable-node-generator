@@ -1,10 +1,16 @@
 # 外部簽核站點 JSON 產生器
 
-## 專案目的
+一個網頁工具，用來產生外部簽核站點設定 JSON。不需要寫程式、不需要安裝任何軟體，開啟網頁即可使用。
 
-本專案建立一個可部署於 GitHub Pages 的純前端工具，用來產生外部簽核站點設定 JSON。
+## 線上使用
 
-外部程式最後需回傳以下根節點：
+<https://uofficeforcex.github.io/signable-node-generator/>
+
+直接用瀏覽器開啟上方連結即可開始使用；也可以下載本 repository 後直接開啟 `index.html`。
+
+## 這個工具能做什麼
+
+外部程式最終需要一份符合特定格式的簽核站點設定 JSON，根節點固定為：
 
 ```json
 {
@@ -12,110 +18,123 @@
 }
 ```
 
-每個站點物件包含簽核者設定、完成規則、簽核動作、跳關設定與欄位權限設定。
+透過本工具，你可以用表單操作的方式建立與編輯這份 JSON，不需要手刻 JSON 語法：
 
-## 技術方向
+- 新增、複製、刪除簽核站點。
+- 拖拉調整站點順序（順序即為匯出 JSON 中的陣列順序）。
+- 以表單編輯每個站點的簽核者、完成規則、簽核動作、跳關設定與欄位權限等屬性。
+- 即時預覽格式化後的 JSON（此欄可關閉、可重新開啟）。
+- 匯入既有的 `.json` 檔案或貼上 JSON 文字繼續編輯。
+- 匯出 JSON 檔案，或一鍵複製到剪貼簿。
+- 匯入、匯出前自動驗證資料，並顯示可理解的錯誤訊息，避免產生不合法的 JSON。
 
-- HTML
-- CSS
-- Vanilla JavaScript
-- Bootstrap 5 CDN
-- SortableJS CDN
-- GitHub Pages 靜態部署
+## JSON 格式說明
 
-## 不使用項目
+以下整理自《[外部簽核站點設定開發手冊](https://hackmd.io/@PicaKen/ByjB_LQmzl)》，說明匯出 JSON 的資料結構重點。完整欄位規格請見 [docs/DATA_MODEL.md](docs/DATA_MODEL.md)、[docs/VALIDATION_SPEC.md](docs/VALIDATION_SPEC.md)、[docs/REFERENCE_JSON.md](docs/REFERENCE_JSON.md)。
 
-- 後端服務
-- 資料庫
-- 登入系統
-- npm
-- build 流程
-- TypeScript
-- Angular / React / Vue
+### 根節點與站點主要欄位
 
-## 主要功能
+根節點固定為 `signableNodes`（陣列），每個站點物件（`SignableNode`）包含：
 
-- 新增多個簽核站點。
-- 左欄拖拉調整站點順序。
-- 中欄編輯站點屬性。
-- 右欄即時預覽 JSON。
-- JSON 預覽欄可完全關閉。
-- 匯入 JSON 檔案。
-- 貼上 JSON 匯入。
-- 匯出 JSON 檔案。
-- 複製 JSON 到剪貼簿。
-- 匯入與匯出前執行驗證。
+| 欄位 | 說明 |
+|---|---|
+| `code` | 站點代碼（必填，且不可與其他站點重複） |
+| `note` | 給簽核者的話（可為 `null`） |
+| `approverSetting` | 審核者設定 |
+| `completeRuleSetting` | 送單完成規則 |
+| `decisionSetting` | 簽核動作與權限設定 |
+| `skipSetting` | 相同簽核者跳關設定 |
+| `noSignerSkipSetting` | 找不到簽核者時的跳關設定 |
+| `fieldPermissionSettings` | 欄位權限設定列表（可為空陣列） |
 
-## 線上展示
+### 審核者設定（`approverSetting`）
 
-本專案已部署至 GitHub Pages：
+- `userTypes`（必填，可複選）：審核者類型組合。
+  - `Applicant`：申請者
+  - `SuprOfAppl`：申請者主管
+  - `Supervisor`：上一站主管
+  - `Custom`：指定人員（需同步設定 `custom`）
+  - `Field`：組織欄位（需同步設定 `field`）
+  - `Plugin`：外掛欄位（需同步設定 `plugin`）
+- `custom`：指定人員／組織架構清單，每筆物件以 `itemType`（`1`~`7`）決定需要填寫的欄位：
+  1. 部門（`deptCode`、`containsChildren`）
+  2. 職稱（`jobTitleCode`）
+  3. 職務（`jobFuncCode`）
+  4. 部門 + 職稱（`deptCode`、`jobTitleCode`、`containsChildren`）
+  5. 部門 + 職務（`deptCode`、`jobFuncCode`、`containsChildren`）
+  6. 部門主管（`deptCode`、`containsChildren`）
+  7. 部門人員（`deptCode`、`account`）
+- `field`：來自組織欄位（`code`、`signType`：`0` 部門所有人員／`1` 部門主管）。
+- `plugin`：來自外掛欄位（`code`、`jsonPath`）。
 
-<https://uofficeforcex.github.io/signable-node-generator/>
+### 完成規則（`completeRuleSetting`）
 
-推送到 `main` 分支時，`.github/workflows/deploy-pages.yml` 會自動建置並部署最新內容，無需手動操作。
+- `completeRule`：`0` 任一決（其中一人同意即通過）／`1` 全員決（需全員同意）。
 
-## 自動化測試
+### 簽核動作與權限（`decisionSetting.defaultDecisionSetting`）
 
-直接在瀏覽器開啟 `tests.html` 即可執行自動化測試（純 Vanilla JS，無需 npm / build）。測試涵蓋 `state.js`、`generator.js`、`validator.js`、`importer.js` 的邏輯行為，測試結果會顯示在頁面標題與畫面上。
+- `inherit`：是否繼承表單全域設定。
+- `allowedDisapprove` / `allowedReturn`：是否允許「否決」「退簽」。
+- `allowDirectSendToReturner`：退簽重送後是否直接送回原退簽者。
+- `allowedAdditionalBranch` + `additionalBranchSetting`：是否允許「徵詢」及其對象限制。
+- `allowedCounterBranch` + `counterBranchSetting`：是否允許「加簽」及其對象限制。
+- `additionalBranchType` / `counterBranchType`：`0` 任何人／`1` 同部門／`2` 指定人員（搭配 `custom` 清單，結構同 `approverSetting.custom`）。
 
-## 文件結構
+### 跳關設定（`skipSetting` / `noSignerSkipSetting`）
 
-```text
-AGENTS.md
-LICENSE
-README.md
-index.html
-tests.html
-css/
-  style.css
-docs/
-  SPEC.md
-  DATA_MODEL.md
-  UI_SPEC.md
-  VALIDATION_SPEC.md
-  IMPORT_EXPORT_SPEC.md
-  ARCHITECTURE.md
-  COPILOT_TASKS.md
-  TEST_CASES.md
-  REFERENCE_JSON.md
-js/
-  app.js
-  constants.js
-  state.js
-  renderer.js
-  form-binder.js
-  generator.js
-  importer.js
-  exporter.js
-  validator.js
-  drag-drop.js
-  layout-resizer.js
-  tests/
-    test-framework.js
-    state.test.js
-    generator.test.js
-    validator.test.js
-    importer.test.js
-    run-tests.js
-.github/
-  workflows/
-    deploy-pages.yml
+- `inherit`：是否繼承表單設定。
+- `allowedSkip`：是否允許跳關（`skipSetting` 為「相同簽核者跳關」，`noSignerSkipSetting` 為「找不到簽核者跳關」）。
+
+### 欄位權限設定（`fieldPermissionSettings`）
+
+- `fieldCode`（必填）：目標欄位代號。
+- `fieldParentCode`：父層欄位代號（明細子欄位須填寫）。
+- `editPermissionSetting`：編輯權限，包含 `inherit`、`required`、`allowToEdit`、`allowType`（`0` 所有人員／`1` 特定人員）、`custom`。
+- `viewPermissionSetting`：觀看權限，欄位同上，但**不包含 `required`**。
+
+### 範例：最簡易站點設定
+
+僅簽核給「申請者」本人確認，採「任一決」，其餘動作與跳關規則皆繼承表單預設：
+
+```json
+{
+  "signableNodes": [
+    {
+      "code": "nodeCode",
+      "note": null,
+      "approverSetting": {
+        "userTypes": ["Applicant"],
+        "custom": null,
+        "field": null,
+        "plugin": null
+      },
+      "decisionSetting": {
+        "defaultDecisionSetting": {
+          "inherit": true,
+          "allowedDisapprove": true,
+          "allowedReturn": true,
+          "allowDirectSendToReturner": false,
+          "allowedAdditionalBranch": false,
+          "allowedCounterBranch": false,
+          "additionalBranchSetting": { "additionalBranchType": 0, "custom": null },
+          "counterBranchSetting": { "counterBranchType": 0, "custom": null }
+        }
+      },
+      "completeRuleSetting": { "completeRule": 0 },
+      "noSignerSkipSetting": { "inherit": true, "allowedSkip": false },
+      "skipSetting": { "inherit": true, "allowedSkip": true },
+      "fieldPermissionSettings": []
+    }
+  ]
+}
 ```
 
-## 建議開發方式
+更多範例（多重審核者類型組合、徵詢／加簽對象限制、欄位權限特定人員設定等進階站點）請見 [docs/REFERENCE_JSON.md](docs/REFERENCE_JSON.md)。
 
-AI coding agent 應先閱讀：
+## 授權
 
-1. `AGENTS.md`
-2. `docs/SPEC.md`
-3. `docs/DATA_MODEL.md`
-4. `docs/UI_SPEC.md`
-5. `docs/VALIDATION_SPEC.md`
-6. `docs/IMPORT_EXPORT_SPEC.md`
-7. `docs/COPILOT_TASKS.md`
+詳見 [LICENSE](LICENSE)。
 
-## 部署方式
+## 開發者資訊
 
-實作檔案放在 repository root（`index.html`、`css/style.css`、`js/*.js`）。
-
-推送到 `main` 分支後，`.github/workflows/deploy-pages.yml` 會自動將 repository root 建置並部署到 GitHub Pages，無需手動設定 Pages Source 目錄。
+若你要參與開發或了解本工具的規格與實作方式，請參考 [AGENTS.md](AGENTS.md) 與 [docs/](docs/) 目錄下的相關文件。
