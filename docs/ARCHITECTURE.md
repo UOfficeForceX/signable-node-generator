@@ -1,10 +1,11 @@
 # 實作架構規格
 
-## 1. 建議檔案結構
+## 1. 實際檔案結構
 
 ```text
-external-signable-node-generator/
+signable-node-generator/
 ├─ index.html
+├─ tests.html
 ├─ css/
 │  └─ style.css
 ├─ js/
@@ -18,7 +19,14 @@ external-signable-node-generator/
 │  ├─ exporter.js
 │  ├─ validator.js
 │  ├─ drag-drop.js
-│  └─ layout-resizer.js
+│  ├─ layout-resizer.js
+│  └─ tests/
+│     ├─ test-framework.js
+│     ├─ state.test.js
+│     ├─ generator.test.js
+│     ├─ validator.test.js
+│     ├─ importer.test.js
+│     └─ run-tests.js
 ├─ docs/
 │  ├─ SPEC.md
 │  ├─ DATA_MODEL.md
@@ -29,9 +37,17 @@ external-signable-node-generator/
 │  ├─ COPILOT_TASKS.md
 │  ├─ TEST_CASES.md
 │  └─ REFERENCE_JSON.md
+├─ .github/
+│  └─ workflows/
+│     └─ deploy-pages.yml
 ├─ AGENTS.md
+├─ LICENSE
 └─ README.md
 ```
+
+`tests.html` 與 `js/tests/*` 為自動化測試（純 Vanilla JS，無 npm/CDN 依賴），在瀏覽器開啟 `tests.html` 即可執行，涵蓋 `state.js`／`generator.js`／`validator.js`／`importer.js` 的邏輯。
+
+`.github/workflows/deploy-pages.yml` 於推送至 `main` 時自動部署靜態網站至 GitHub Pages。
 
 ## 2. JavaScript 模組職責
 

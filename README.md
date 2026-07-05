@@ -46,11 +46,28 @@
 - 複製 JSON 到剪貼簿。
 - 匯入與匯出前執行驗證。
 
+## 線上展示
+
+本專案已部署至 GitHub Pages：
+
+<https://uofficeforcex.github.io/signable-node-generator/>
+
+推送到 `main` 分支時，`.github/workflows/deploy-pages.yml` 會自動建置並部署最新內容，無需手動操作。
+
+## 自動化測試
+
+直接在瀏覽器開啟 `tests.html` 即可執行自動化測試（純 Vanilla JS，無需 npm / build）。測試涵蓋 `state.js`、`generator.js`、`validator.js`、`importer.js` 的邏輯行為，測試結果會顯示在頁面標題與畫面上。
+
 ## 文件結構
 
 ```text
 AGENTS.md
+LICENSE
 README.md
+index.html
+tests.html
+css/
+  style.css
 docs/
   SPEC.md
   DATA_MODEL.md
@@ -61,6 +78,28 @@ docs/
   COPILOT_TASKS.md
   TEST_CASES.md
   REFERENCE_JSON.md
+js/
+  app.js
+  constants.js
+  state.js
+  renderer.js
+  form-binder.js
+  generator.js
+  importer.js
+  exporter.js
+  validator.js
+  drag-drop.js
+  layout-resizer.js
+  tests/
+    test-framework.js
+    state.test.js
+    generator.test.js
+    validator.test.js
+    importer.test.js
+    run-tests.js
+.github/
+  workflows/
+    deploy-pages.yml
 ```
 
 ## 建議開發方式
@@ -77,12 +116,6 @@ AI coding agent 應先閱讀：
 
 ## 部署方式
 
-將完成後的靜態檔案推送至 GitHub repository，並設定 GitHub Pages 指向 repository root 或 `/docs` 以外的實際靜態網站目錄。
+實作檔案放在 repository root（`index.html`、`css/style.css`、`js/*.js`）。
 
-本規格建議實作檔案放在 repository root：
-
-```text
-index.html
-css/style.css
-js/*.js
-```
+推送到 `main` 分支後，`.github/workflows/deploy-pages.yml` 會自動將 repository root 建置並部署到 GitHub Pages，無需手動設定 Pages Source 目錄。
