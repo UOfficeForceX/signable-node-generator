@@ -372,7 +372,7 @@ function renderCustomListHtml(customArray, arrayPath) {
   return `
     <div class="custom-list">
       ${items}
-      <button type="button" class="btn btn-sm btn-outline-primary" data-action="add-custom" data-target="${arrayPath}">+ 新增條件</button>
+      <button type="button" class="btn btn-sm btn-outline-primary" data-action="add-custom" data-target="${arrayPath}">+ 新增項目</button>
     </div>`;
 }
 
