@@ -10,6 +10,16 @@ describe('generator.js - JSON 產生', () => {
     assertEqual(output.signableNodes[0]._ui, undefined);
   });
 
+  it('JSON 輸出應包含 siteTag 與送單按鈕名稱設定', () => {
+    initState();
+    const node = getSelectedNode();
+    node.siteTag = '財務簽核';
+    node.formSignActionSetting = { inherit: false, formSignActionCode: 'submitFinance' };
+    const outputNode = generateOutputJson().signableNodes[0];
+    assertEqual(outputNode.siteTag, '財務簽核');
+    assertDeepEqual(outputNode.formSignActionSetting, { inherit: false, formSignActionCode: 'submitFinance' });
+  });
+
   it('TC-505 cleanNodeForExport 不應輸出 viewPermissionSetting.required（即使誤植也要移除）', () => {
     initState();
     const node = getSelectedNode();

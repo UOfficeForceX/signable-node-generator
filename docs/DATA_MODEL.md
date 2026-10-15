@@ -16,14 +16,16 @@
 
 | 欄位 | 型別 | 必填 | 說明 |
 |---|---|---:|---|
-| `code` | String | 是 | 站點代碼 |
-| `note` | String / null | 否 | 給簽核者的話 |
+| `code` | String | 是 | 站點代碼，最多 50 字元 |
+| `note` | String / null | 否 | 給簽核者的話，最多 500 字元 |
+| `siteTag` | String / null | 否 | 站點標籤，最多 30 字元；產生器預設輸出 `null` |
 | `approverSetting` | Object | 是 | 簽核者設定 |
 | `completeRuleSetting` | Object | 是 | 站點完成規則 |
 | `decisionSetting` | Object | 是 | 簽核動作與權限 |
 | `skipSetting` | Object | 是 | 相同簽核者跳關 |
 | `noSignerSkipSetting` | Object | 是 | 找不到簽核者跳關 |
 | `fieldPermissionSettings` | Array | 是 | 欄位權限設定，可為空陣列 |
+| `formSignActionSetting` | Object | 是 | 送單按鈕名稱設定；舊版匯入資料可省略並套用預設值 |
 
 ## 3. approverSetting
 
@@ -241,3 +243,19 @@
 | 1 | 特定人員 |
 
 當 `allowType = 1` 時，`custom` 至少一筆。當 `allowType = 0` 時，`custom` 應為 `null`。
+
+## 8. formSignActionSetting
+
+```json
+{
+  "inherit": true,
+  "formSignActionCode": null
+}
+```
+
+| 欄位 | 型別 | 說明 |
+|---|---|---|
+| `inherit` | Boolean | 是否繼承表單設定 |
+| `formSignActionCode` | String / null | 送單按鈕名稱主檔代碼；未設定時依表單全域設定 |
+
+匯入的舊版站點若沒有 `formSignActionSetting`，產生器會以 `{ "inherit": true, "formSignActionCode": null }` 補齊。新輸出一律包含此物件。

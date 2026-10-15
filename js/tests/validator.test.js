@@ -131,6 +131,50 @@ describe('validator.js - approverSetting (TC-201 ~ TC-208)', () => {
   });
 });
 
+describe('validator.js - 新增站點設定與字數限制', () => {
+  it('code、note、siteTag 的最大長度應通過驗證', () => {
+    const node = buildMinimalNode({
+      code: 'c'.repeat(NODE_CODE_MAX_LENGTH),
+      note: 'n'.repeat(NODE_NOTE_MAX_LENGTH),
+      siteTag: 't'.repeat(NODE_SITE_TAG_MAX_LENGTH)
+    });
+    assertEqual(validateNode(node, 0).length, 0);
+  });
+
+  it('code 超過 50 字、note 超過 500 字或 siteTag 超過 30 字應驗證失敗', () => {
+    const node = buildMinimalNode({
+      code: 'c'.repeat(NODE_CODE_MAX_LENGTH + 1),
+      note: 'n'.repeat(NODE_NOTE_MAX_LENGTH + 1),
+      siteTag: 't'.repeat(NODE_SITE_TAG_MAX_LENGTH + 1)
+    });
+    const errors = validateNode(node, 0);
+    assertTrue(errors.some((e) => e.path.endsWith('.code')));
+    assertTrue(errors.some((e) => e.path.endsWith('.note')));
+    assertTrue(errors.some((e) => e.path.endsWith('.siteTag')));
+  });
+
+  it('siteTag 與送單按鈕設定可為 null / 符合規格的設定物件', () => {
+    const node = buildMinimalNode({
+      siteTag: null,
+      formSignActionSetting: { inherit: false, formSignActionCode: 'actionCode' }
+    });
+    assertEqual(validateNode(node, 0).length, 0);
+  });
+
+  it('錯誤的送單按鈕設定型別應驗證失敗', () => {
+    const node = buildMinimalNode({
+      formSignActionSetting: { inherit: 'true', formSignActionCode: 123 }
+    });
+    const errors = validateNode(node, 0);
+    assertTrue(errors.some((e) => e.path.endsWith('.inherit')));
+    assertTrue(errors.some((e) => e.path.endsWith('.formSignActionCode')));
+  });
+
+  it('缺少新增欄位的舊版 JSON 應保持可匯入', () => {
+    assertEqual(validateNode(buildMinimalNode(), 0).length, 0);
+  });
+});
+
 describe('validator.js - completeRuleSetting (TC-303)', () => {
   it('completeRule 為 0 或 1 應驗證成功', () => {
     assertEqual(validateNode(buildMinimalNode({ completeRuleSetting: { completeRule: 0 } }), 0).length, 0);

@@ -58,7 +58,7 @@ function renderSiteCard(node, idx) {
 
 // ---------- 中欄：站點屬性檢視及編輯 ----------
 
-const ACCORDION_SECTION_IDS = ['secBasic', 'secApprover', 'secComplete', 'secDecision', 'secSkip', 'secFieldPerm'];
+const ACCORDION_SECTION_IDS = ['secBasic', 'secApprover', 'secComplete', 'secDecision', 'secSkip', 'secFieldPerm', 'secFormSignAction'];
 
 function renderEditor() {
   const container = document.getElementById('editorContainer');
@@ -81,6 +81,7 @@ function renderEditor() {
       ${renderDecisionSection(node)}
       ${renderSkipSection(node)}
       ${renderFieldPermissionSection(node)}
+      ${renderFormSignActionSection(node)}
     </div>`;
 
   restoreAccordionState(container, openSections);
@@ -128,11 +129,15 @@ function renderBasicSection(node) {
       <div class="accordion-body">
         <div class="mb-3">
           <label class="form-label"><span class="required-mark">*</span>站點代碼 code</label>
-          <input type="text" class="form-control" data-path="code" value="${escapeHtml(node.code)}">
+          <input type="text" class="form-control" data-path="code" maxlength="${NODE_CODE_MAX_LENGTH}" value="${escapeHtml(node.code)}">
         </div>
         <div class="mb-3">
           <label class="form-label">給簽核者的話 note</label>
-          <textarea class="form-control" rows="2" data-path="note" data-null-if-empty="true">${escapeHtml(node.note || '')}</textarea>
+          <textarea class="form-control" rows="2" data-path="note" data-null-if-empty="true" maxlength="${NODE_NOTE_MAX_LENGTH}">${escapeHtml(node.note || '')}</textarea>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">站點標籤 siteTag</label>
+          <input type="text" class="form-control" data-path="siteTag" data-null-if-empty="true" maxlength="${NODE_SITE_TAG_MAX_LENGTH}" value="${escapeHtml(node.siteTag)}">
         </div>
       </div>
     </div>
@@ -313,6 +318,25 @@ function renderFieldPermissionSection(node) {
       <div class="accordion-body">
         ${items || '<p class="text-muted small">尚未設定欄位權限。</p>'}
         <button type="button" class="btn btn-sm btn-outline-primary" data-action="add-field-permission">+ 新增欄位權限</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderFormSignActionSection(node) {
+  const setting = node.formSignActionSetting;
+  return `
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#secFormSignAction">送單按鈕名稱設定</button>
+    </h2>
+    <div id="secFormSignAction" class="accordion-collapse collapse">
+      <div class="accordion-body">
+        ${checkboxRow('formSignActionSetting.inherit', setting.inherit, '繼承表單設定')}
+        <div class="mb-2">
+          <label class="form-label">送單按鈕名稱代碼 formSignActionCode</label>
+          <input type="text" class="form-control" data-path="formSignActionSetting.formSignActionCode" data-null-if-empty="true" value="${escapeHtml(setting.formSignActionCode)}">
+        </div>
       </div>
     </div>
   </div>`;

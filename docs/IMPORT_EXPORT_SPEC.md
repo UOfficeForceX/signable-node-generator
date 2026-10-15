@@ -162,3 +162,9 @@ JSON.stringify(data, null, 2)
 - 未使用的 `plugin` 輸出 `null`。
 - `itemType` 只允許 `1` 到 `7`。
 - 移除內部 UI 狀態，例如欄寬、是否開啟 JSON 預覽、選取索引等。
+
+## 13. 新欄位與舊版匯入相容
+
+- 匯出站點一律包含 `siteTag`；未設定時輸出 `null`。
+- 匯出站點一律包含 `formSignActionSetting`，預設為 `{ "inherit": true, "formSignActionCode": null }`。
+- 匯入缺少 `siteTag` 或 `formSignActionSetting` 的舊版 JSON 時，補上上述預設值，不影響原有資料驗證與匯入流程。

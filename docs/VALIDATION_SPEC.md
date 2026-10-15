@@ -24,14 +24,19 @@
 
 | 欄位 | 規則 |
 |---|---|
-| `code` | 必填，不可空白 |
+| `code` | 必填，不可空白，最多 50 字元 |
 | `code` | 不可與其他站點的 `code` 重複（同一份 JSON 內所有站點代碼須唯一） |
+| `note` | 可為 String 或 null，最多 500 字元 |
+| `siteTag` | 可為 String 或 null，最多 30 字元 |
 | `approverSetting` | 必填 |
 | `completeRuleSetting` | 必填 |
 | `decisionSetting` | 必填 |
 | `skipSetting` | 必填 |
 | `noSignerSkipSetting` | 必填 |
 | `fieldPermissionSettings` | 必須是 Array，可為空陣列 |
+| `formSignActionSetting` | 新輸出必須包含；舊版匯入可省略並套用預設值 |
+
+`formSignActionSetting` 存在時：`inherit` 必須是 Boolean，`formSignActionCode` 必須是 String 或 null。
 
 建議錯誤格式：
 

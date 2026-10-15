@@ -7,6 +7,13 @@ describe('state.js - 站點管理 (TC-101 ~ TC-105)', () => {
     assertEqual(appState.selectedNodeIndex, 0);
   });
 
+  it('預設站點應包含 siteTag 與送單按鈕名稱設定預設值', () => {
+    initState();
+    const node = getSelectedNode();
+    assertEqual(node.siteTag, null);
+    assertDeepEqual(node.formSignActionSetting, { inherit: true, formSignActionCode: null });
+  });
+
   it('TC-101 addNode 應新增站點並自動選取新站點', () => {
     initState();
     addNode();

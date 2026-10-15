@@ -61,6 +61,7 @@ function createDefaultNode() {
     _ui: { approverFieldKind: 'person' },
     code: 'nodeCode',
     note: null,
+    siteTag: null,
     approverSetting: {
       userTypes: ['Applicant'],
       custom: null,
@@ -82,7 +83,8 @@ function createDefaultNode() {
     },
     skipSetting: { inherit: true, allowedSkip: true },
     noSignerSkipSetting: { inherit: true, allowedSkip: false },
-    fieldPermissionSettings: []
+    fieldPermissionSettings: [],
+    formSignActionSetting: { inherit: true, formSignActionCode: null }
   };
 }
 

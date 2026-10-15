@@ -32,6 +32,34 @@ function validateNode(node, index) {
 
   if (!node.code || typeof node.code !== 'string' || !node.code.trim()) {
     errors.push({ path: `${prefix}.code`, message: `${label} / 站點基本資料：站點代碼為必填，不可空白。` });
+  } else if (node.code.length > NODE_CODE_MAX_LENGTH) {
+    errors.push({ path: `${prefix}.code`, message: `${label} / 站點基本資料：站點代碼不可超過 ${NODE_CODE_MAX_LENGTH} 個字元。` });
+  }
+
+  if (node.note != null && typeof node.note !== 'string') {
+    errors.push({ path: `${prefix}.note`, message: `${label} / 站點基本資料：note 必須是文字或 null。` });
+  } else if (typeof node.note === 'string' && node.note.length > NODE_NOTE_MAX_LENGTH) {
+    errors.push({ path: `${prefix}.note`, message: `${label} / 站點基本資料：note 不可超過 ${NODE_NOTE_MAX_LENGTH} 個字元。` });
+  }
+
+  if (node.siteTag != null && typeof node.siteTag !== 'string') {
+    errors.push({ path: `${prefix}.siteTag`, message: `${label} / 站點基本資料：siteTag 必須是文字或 null。` });
+  } else if (typeof node.siteTag === 'string' && node.siteTag.length > NODE_SITE_TAG_MAX_LENGTH) {
+    errors.push({ path: `${prefix}.siteTag`, message: `${label} / 站點基本資料：siteTag 不可超過 ${NODE_SITE_TAG_MAX_LENGTH} 個字元。` });
+  }
+
+  if (node.formSignActionSetting !== undefined) {
+    const formSignActionSetting = node.formSignActionSetting;
+    if (!formSignActionSetting || typeof formSignActionSetting !== 'object' || Array.isArray(formSignActionSetting)) {
+      errors.push({ path: `${prefix}.formSignActionSetting`, message: `${label} / 送單按鈕名稱設定：formSignActionSetting 必須是物件。` });
+    } else {
+      if (typeof formSignActionSetting.inherit !== 'boolean') {
+        errors.push({ path: `${prefix}.formSignActionSetting.inherit`, message: `${label} / 送單按鈕名稱設定：inherit 必須是布林值。` });
+      }
+      if (typeof formSignActionSetting.formSignActionCode !== 'string' && formSignActionSetting.formSignActionCode !== null) {
+        errors.push({ path: `${prefix}.formSignActionSetting.formSignActionCode`, message: `${label} / 送單按鈕名稱設定：formSignActionCode 必須是文字或 null。` });
+      }
+    }
   }
 
   if (!node.approverSetting || typeof node.approverSetting !== 'object') {

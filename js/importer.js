@@ -73,6 +73,10 @@ async function handleImportConfirm() {
 function hydrateImportedNode(rawNode) {
   const node = deepClone(rawNode);
   node._uid = generateUid();
+  if (!Object.prototype.hasOwnProperty.call(node, 'siteTag')) node.siteTag = null;
+  if (!Object.prototype.hasOwnProperty.call(node, 'formSignActionSetting')) {
+    node.formSignActionSetting = { inherit: true, formSignActionCode: null };
+  }
   const hasDeptSignType = !!(node.approverSetting && node.approverSetting.field && node.approverSetting.field.signType != null);
   node._ui = { approverFieldKind: hasDeptSignType ? 'dept' : 'person' };
   return node;

@@ -10,6 +10,7 @@
     {
       "code": "nodeCode",
       "note": null,
+      "siteTag": null,
       "approverSetting": {
         "userTypes": [
           "Applicant"
@@ -47,7 +48,11 @@
         "inherit": true,
         "allowedSkip": true
       },
-      "fieldPermissionSettings": []
+      "fieldPermissionSettings": [],
+      "formSignActionSetting": {
+        "inherit": true,
+        "formSignActionCode": null
+      }
     }
   ]
 }
@@ -61,6 +66,7 @@
     {
       "code": "mySiteCode2",
       "note": "欄位備註說明",
+      "siteTag": "財務簽核",
       "approverSetting": {
         "userTypes": [
           "Applicant",
@@ -128,7 +134,11 @@
             "custom": null
           }
         }
-      ]
+      ],
+      "formSignActionSetting": {
+        "inherit": false,
+        "formSignActionCode": "myFormSignActionCode"
+      }
     }
   ]
 }

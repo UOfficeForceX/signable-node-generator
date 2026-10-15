@@ -1,5 +1,9 @@
 // enum、選項清單、預設值
 
+const NODE_CODE_MAX_LENGTH = 50;
+const NODE_NOTE_MAX_LENGTH = 500;
+const NODE_SITE_TAG_MAX_LENGTH = 30;
+
 const USER_TYPE_OPTIONS = [
   { value: 'Applicant', label: '申請者' },
   { value: 'SuprOfAppl', label: '申請者直屬主管' },

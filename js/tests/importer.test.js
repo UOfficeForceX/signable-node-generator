@@ -32,6 +32,25 @@ describe('importer.js - hydrateImportedNode', () => {
     hydrateImportedNode(raw);
     assertEqual(raw._uid, undefined);
   });
+
+  it('舊版 JSON 缺少 siteTag 與送單按鈕設定時應補上預設值', () => {
+    const raw = { code: 'legacy', approverSetting: { userTypes: ['Applicant'], field: null } };
+    const hydrated = hydrateImportedNode(raw);
+    assertEqual(hydrated.siteTag, null);
+    assertDeepEqual(hydrated.formSignActionSetting, { inherit: true, formSignActionCode: null });
+  });
+
+  it('匯入時應保留已設定的 siteTag 與送單按鈕設定', () => {
+    const raw = {
+      code: 'existing',
+      siteTag: '法務',
+      formSignActionSetting: { inherit: false, formSignActionCode: 'submitLegal' },
+      approverSetting: { userTypes: ['Applicant'], field: null }
+    };
+    const hydrated = hydrateImportedNode(raw);
+    assertEqual(hydrated.siteTag, '法務');
+    assertDeepEqual(hydrated.formSignActionSetting, { inherit: false, formSignActionCode: 'submitLegal' });
+  });
 });
 
 describe('importer.js - 匯入驗證閘門 (TC-601 ~ TC-605)', () => {

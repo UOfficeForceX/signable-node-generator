@@ -63,14 +63,16 @@
 
 每個站點可設定：
 
-- 站點代碼 `code`
-- 給簽核者的話 `note`
+- 站點代碼 `code`（最多 50 字元）
+- 給簽核者的話 `note`（最多 500 字元）
+- 站點標籤 `siteTag`（最多 30 字元）
 - 簽核者設定 `approverSetting`
 - 完成規則 `completeRuleSetting`
 - 簽核動作設定 `decisionSetting`
 - 相同簽核者跳關 `skipSetting`
 - 找不到簽核者跳關 `noSignerSkipSetting`
 - 欄位權限 `fieldPermissionSettings`
+- 送單按鈕名稱 `formSignActionSetting`
 
 ### 5.3 JSON 匯入
 
